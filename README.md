@@ -47,53 +47,43 @@ A full-stack web application that allows users to participate in polls created b
 - **Lucide React**: Icon library
 - **CSS3**: Custom styling with responsive design
 
-## Database Schema
+## Database Schema (PostgreSQL)
 
-### User Collection
-```javascript
-{
-  _id: ObjectId,
-  username: String (unique, required),
-  email: String (unique, required),
-  password: String (hashed, required),
-  role: String (enum: ['user', 'admin'], default: 'user'),
-  isActive: Boolean (default: true),
-  createdAt: Date,
-  updatedAt: Date
-}
-```
+![ER Diagram](./er-diagram.png)
 
-### Poll Collection
-```javascript
-{
-  _id: ObjectId,
-  question: String (required),
-  options: [{
-    _id: ObjectId,
-    text: String (required),
-    votes: Number (default: 0)
-  }],
-  createdBy: ObjectId (ref: 'User'),
-  closingDate: Date (required),
-  isActive: Boolean (default: true),
-  isClosed: Boolean (default: false),
-  totalVotes: Number (default: 0),
-  createdAt: Date,
-  updatedAt: Date
-}
-```
+```sql
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    name VARCHAR(50) NOT NULL,
+    role VARCHAR(10) NOT NULL DEFAULT 'user' CHECK (role IN ('user', 'admin')),
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
-### Vote Collection
-```javascript
-{
-  _id: ObjectId,
-  user: ObjectId (ref: 'User'),
-  poll: ObjectId (ref: 'Poll'),
-  option: ObjectId (ref: 'Poll.options'),
-  votedAt: Date (default: Date.now),
-  createdAt: Date,
-  updatedAt: Date
-}
+CREATE TABLE polls (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(200) NOT NULL,
+    description TEXT,
+    options TEXT[] NOT NULL,
+    created_by INTEGER REFERENCES users(id),
+    closing_date TIMESTAMP NOT NULL,
+    is_closed BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE votes (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id),
+    poll_id INTEGER REFERENCES polls(id),
+    selected_option INTEGER NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(user_id, poll_id)
+);
 ```
 
 ## API Endpoints
