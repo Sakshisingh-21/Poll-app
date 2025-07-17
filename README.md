@@ -343,3 +343,9 @@ Your Name - [your-email@example.com]
 - MongoDB documentation
 - Lucide React for icons
 - React Hot Toast for notifications 
+
+## Live Demo
+
+You can access the deployed frontend here:
+
+[https://poll-app-new.onrender.com/](https://poll-app-new.onrender.com/) 
