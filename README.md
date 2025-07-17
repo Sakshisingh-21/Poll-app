@@ -49,7 +49,7 @@ A full-stack web application that allows users to participate in polls created b
 
 ## Database Schema (PostgreSQL)
 
-![ER Diagram](er-diagram.png)
+![ER Diagram](./er.png)
 
 ```sql
 CREATE TABLE users (
