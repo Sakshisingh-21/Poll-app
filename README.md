@@ -1,6 +1,6 @@
 # Poll & Voting App
 
-A full-stack web application that allows users to participate in polls created by admins. Built with Node.js, Express, MongoDB for the backend API and React for the frontend.
+A full-stack web application that allows users to participate in polls created by admins. Built with Node.js, Express, PostgreSQL for the backend API and React for the frontend.
 
 ## Features
 
@@ -22,7 +22,7 @@ A full-stack web application that allows users to participate in polls created b
 - **Responsive Design**: Works seamlessly on desktop and mobile devices
 - **Real-time Validation**: Form validation with helpful error messages
 - **Security**: Password hashing, JWT authentication, and input sanitization
-- **Database**: MongoDB with Mongoose ODM
+- **Database**: PostgreSQL with Sequelize ORM
 - **API**: RESTful API with comprehensive error handling
 
 ## Technologies Used
@@ -30,8 +30,8 @@ A full-stack web application that allows users to participate in polls created b
 ### Backend
 - **Node.js**: JavaScript runtime environment
 - **Express.js**: Web application framework
-- **MongoDB**: NoSQL database
-- **Mongoose**: MongoDB object modeling
+- **PostgreSQL**: Relational database
+- **Sequelize**: PostgreSQL ORM
 - **bcryptjs**: Password hashing
 - **jsonwebtoken**: JWT authentication
 - **express-validator**: Input validation
@@ -123,7 +123,7 @@ CREATE TABLE votes (
 
 ### Prerequisites
 - Node.js (v14 or higher)
-- MongoDB (local installation or MongoDB Atlas)
+- PostgreSQL (local installation or cloud service)
 - npm or yarn
 
 ### Backend Setup
@@ -152,7 +152,7 @@ CREATE TABLE votes (
    ```env
    PORT=5000
    NODE_ENV=development
-   MONGODB_URI=mongodb://localhost:27017/poll-app
+   DATABASE_URL=postgresql://username:password@localhost:5432/poll_app
    JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
    JWT_EXPIRE=7d
    CORS_ORIGIN=http://localhost:3000
@@ -178,28 +178,48 @@ CREATE TABLE votes (
 
 ### Database Setup
 
-1. **Local MongoDB**
+1. **Local PostgreSQL**
    ```bash
-   # Start MongoDB service
-   mongod
+   # Install PostgreSQL (if not already installed)
+   # On Ubuntu/Debian:
+   sudo apt-get install postgresql postgresql-contrib
+   
+   # On macOS with Homebrew:
+   brew install postgresql
+   
+   # On Windows, download from https://www.postgresql.org/download/windows/
+   
+   # Start PostgreSQL service
+   sudo service postgresql start  # Linux
+   brew services start postgresql  # macOS
    ```
 
-2. **MongoDB Atlas (Cloud)**
-   - Create a free account at [MongoDB Atlas](https://www.mongodb.com/atlas)
-   - Create a new cluster
-   - Get your connection string and update `MONGODB_URI` in `.env`
+2. **Create Database**
+   ```bash
+   # Connect to PostgreSQL
+   sudo -u postgres psql
+   
+   # Create database and user
+   CREATE DATABASE poll_app;
+   CREATE USER poll_user WITH PASSWORD 'your_password';
+   GRANT ALL PRIVILEGES ON DATABASE poll_app TO poll_user;
+   \q
+   ```
+
+3. **Cloud PostgreSQL (Railway, Heroku, etc.)**
+   - Create a PostgreSQL database on your preferred cloud service
+   - Get your connection string and update `DATABASE_URL` in `.env`
 
 ## Usage
 
 ### Creating an Admin User
 
 1. Register a regular user account
-2. Manually update the user's role in MongoDB:
-   ```javascript
-   db.users.updateOne(
-     { email: "admin@example.com" },
-     { $set: { role: "admin" } }
-   )
+2. Manually update the user's role in PostgreSQL:
+   ```sql
+   UPDATE users 
+   SET role = 'admin' 
+   WHERE email = 'admin@example.com';
    ```
 
 ### Sample Data
