@@ -350,7 +350,7 @@ Your Name - [your-email@example.com]
 
 - Express.js documentation
 - React documentation
-- MongoDB documentation
+- PostgreSQL documentation
 - Lucide React for icons
 - React Hot Toast for notifications 
 
